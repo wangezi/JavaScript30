@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>JS Drum Kit</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="https://fav.farm/🔥" />
+  <link rel="icon" href="https://fav.farm/🐼" />
 </head>
+
 <body>
 
 
@@ -58,10 +60,23 @@
   <audio data-key="75" src="sounds/tom.wav"></audio>
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
-<script>
+  <script>
+    // 第一步先監聽按下鍵盤的事件
+    window.addEventListener('keydown', function (e) {
+      // console.log(e)
+      // console.log(e.keyCode)
 
-</script>
+      // 設置名叫 audio 常數，監聽只有<audio data-key="?" src="sounds/tink.wav"></audio> 的數值
+      const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+      // console.log(audio)
+
+      // 
+      if (!audio) return
+    });
+
+  </script>
 
 
 </body>
+
 </html>
