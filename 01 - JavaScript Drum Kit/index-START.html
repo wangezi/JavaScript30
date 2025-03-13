@@ -66,15 +66,82 @@
       // console.log(e)
       // console.log(e.keyCode)
 
-      // 設置名叫 audio 常數，監聽只有<audio data-key="?" src="sounds/tink.wav"></audio> 的數值
+      // 設置名叫 audio 常數，監聽<audio data-key="?" src="sounds/tink.wav"></audio> 的數值
       const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
       // console.log(audio)
 
-      // 
-      if (!audio) return
+      // 設置名叫 key 常數，監聽<div data-key="?" class="key"> 的數值(因為要讓鍵盤時換上 class="playing" 的 CSS)
+      const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+      console.log(key)
+
+      // 如果沒有 audio 就停止
+      if (!audio) return;
+
+      // 設定 audio 常數被觸發的時候所開始的時間
+      audio.currentTime = 0;
+
+      // 讓音效播放
+      audio.play()
+
+      // 當 key 被觸發的時候，加上 class="playing" 的 CSS(此時按下鍵盤時，會有 CSS="playing" 的效果)
+      key.classList.add('playing');
     });
 
+
+    //  設置 removeTransition 函數 
+    function removeTransition(e) {
+
+      // console.log(e) => 會看到有 6 個 trasition 效果事件 (因為108行的 forEach 的關係)
+
+      // 選擇抓取 propertyName 屬性名稱(字串) 為 transform
+
+      // 如果 屬性名稱不是 'transform' 就 reutrn
+      if (e.propertyName !== 'transform') return;
+      // console.log(e.propertyName) => 在 F12 控制台，當按下按鍵可以看到出現 transform
+
+      // console.log(this) => 在 F12 控制台，當按下按鍵可以看到出現 <div data-key="?" class="key playing"> ... </div>
+
+      // 再來消除 CSS playing 的效果
+      this.classList.remove('playing');
+    }
+
+    // 接下來設定當放開鍵盤按鍵時，退回到原本的樣式
+
+    // 設置名叫 keys 常數，監聽所有 class="key" 的元素
+    const keys = document.querySelectorAll('.key');
+    // console.log(keys)
+
+    // 讓每個 key 都添加一個 transitionend 事件，當 transition 結束時，執行 removeTransition 函數 
+    keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+
+
   </script>
+
+  <!-- 以下為優化後的 Code -->
+
+  <!-- 把 65 行的 window.addEventListener('keydown', function (e) {...} 的 function 取名叫 playSound 寫在外面(130行)後，再放到最後一行 => window.addEventListener('keydown', playSound);  -->
+
+
+  <!-- <script>
+  function removeTransition(e) {
+    if (e.propertyName !== 'transform') return;
+    e.target.classList.remove('playing');
+  }
+
+  function playSound(e) {
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+    const key = document.querySelector(`div[data-key="${e.keyCode}"]`);
+    if (!audio) return;
+
+    key.classList.add('playing');
+    audio.currentTime = 0;
+    audio.play();
+  }
+
+  const keys = Array.from(document.querySelectorAll('.key'));
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+  window.addEventListener('keydown', playSound);
+</script> -->
 
 
 </body>
