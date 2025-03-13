@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>JS + CSS Clock</title>
-  <link rel="icon" href="https://fav.farm/🔥" />
+  <link rel="icon" href="https://fav.farm/🐼" />
 </head>
+
 <body>
 
 
-    <div class="clock">
-      <div class="clock-face">
-        <div class="hand hour-hand"></div>
-        <div class="hand min-hand"></div>
-        <div class="hand second-hand"></div>
-      </div>
+  <div class="clock">
+    <div class="clock-face">
+      <div class="hand hour-hand"></div>
+      <div class="hand min-hand"></div>
+      <div class="hand second-hand"></div>
     </div>
+  </div>
 
 
   <style>
@@ -44,17 +46,18 @@
       position: relative;
       padding: 2rem;
       box-shadow:
-        0 0 0 4px rgba(0,0,0,0.1),
+        0 0 0 4px rgba(0, 0, 0, 0.1),
         inset 0 0 0 3px #EFEFEF,
         inset 0 0 10px black,
-        0 0 10px rgba(0,0,0,0.2);
+        0 0 10px rgba(0, 0, 0, 0.2);
     }
 
     .clock-face {
       position: relative;
       width: 100%;
       height: 100%;
-      transform: translateY(-3px); /* account for the height of the clock hands */
+      transform: translateY(-3px);
+      /* account for the height of the clock hands */
     }
 
     .hand {
@@ -63,13 +66,100 @@
       background: black;
       position: absolute;
       top: 50%;
-    }
+      /* 第一步驟: 先將指針都朝向12點方位 */
 
+      /* transform-origin:此屬性可讓您改變轉換元素的位置 */
+      transform-origin: 100%;
+
+      /* transform:此屬性可讓您對元素進行旋轉、縮放、移動、傾斜等操作 */
+      transform: rotate(90deg);
+
+      /* 動畫時間 */
+      transition: all 0.5s;
+
+      /* 過渡效果的速度曲線。 */
+      transition-timing-function: cubic-bezier(0, 1.55, 1, 1);
+    }
   </style>
 
+
   <script>
+    // 設置名叫 secondHand 的常數代表 class 名稱 '.second-hand'
+    const secondHand = document.querySelector('.second-hand')
+
+    // 設置名叫 minsHand 的常數代表 class 名稱 '.min-hand'
+    const minsHand = document.querySelector('.min-hand');
+
+    // 設置名叫 hourHand 的常數代表 class 名稱 '.hour-hand'
+    const hourHand = document.querySelector('.hour-hand');
+
+    // 設置名叫 setDate 的 function
+    function setDate() {
+      // console.log('Hi Ian') => 打開 F12 控制台 會發現每一秒就跳出一個 Hi Ian
+
+      // 取名叫 now 的常數來代表日期。 使用new Date()建立日期物件。
+      const now = new Date();
+
+      // --------- 秒針的計算與動畫 START ------------
+
+      // 取名叫 second(秒) 的常數來代表秒數。 getSeconds()傳回日期的秒數（0 到 59）。
+      const second = now.getSeconds();
+
+      // console.log(second)
+
+      // 名叫 seconddegrees(秒的角度) 的常數來代表秒針的角度。 (second / 60)代表一圈要跑60次；360是圓圈有360度；90是因為 CSS 效果 => transform: rotate(90deg);  
+      const secondsdegrees = ((second / 60) * 360) + 90;
+
+      // 顯示上面計算的結果到 secondHand(.second-hand) 的 CSS 效果的 transform 角度
+      secondHand.style.transform = `rotate(${secondsdegrees}deg)`;
+      // console.log(secondHand)
+
+      // --------- 秒針的計算與動畫 END ------------
 
 
+
+      // --------- 分針的計算與動畫 START ------------
+
+      // 取名叫 mins(分) 的常數來代表分鐘。 getMinutes()傳回日期的分鐘數（0 到 59）。
+      const mins = now.getMinutes();
+
+      // console.log(mins)
+
+      // 名叫 minsDegrees(分鐘的角度) 的常數來代表分針的角度。 
+      // ((mins / 60) * 360) 用來根據分鐘數計算出分鐘指針的位置。 
+      // ((seconds / 60) * 6) 用來補償每秒鐘的微小移動，讓分鐘指針平滑過渡。 
+      // + 90 則是將起始位置修正到 12 點的位置（垂直向上）。 
+      const minsDegrees = ((mins / 60) * 360) + ((seconds / 60) * 6) + 90;
+
+      // 顯示上面計算的結果到 minsHand(.min-hand) 的 CSS 效果的 transform 角度
+      minsHand.style.transform = `rotate(${minsDegrees}deg)`;
+      // console.log(minsHand)
+
+      // --------- 分針的計算與動畫 END ------------
+
+      // --------- 時針的計算與動畫 START ------------
+
+      // 取名叫 second(秒) 的常數來代表秒數。 getSeconds()傳回日期的秒數（0 到 59）。
+      const hour = now.getHours();
+
+      // console.log(hour)
+
+      // 名叫 hourDegrees(時針的角度) 的常數來代表時針的角度。 (second / 60)代表一圈要跑60次；360是圓圈有360度；90是因為 CSS 效果 => transform: rotate(90deg);  
+      const hourDegrees = ((hour / 12) * 360) + ((mins / 60) * 30) + 90;
+
+      // 顯示上面計算的結果到 hourHand(.hour-hand) 的 CSS 效果的 transform 角度
+      hourHand.style.transform = `rotate(${hourDegrees}deg)`;
+      // console.log(hourHand)
+
+      //  --------- 時針的計算與動畫 END ------------
+
+    }
+
+    //  setInterval()方法以指定的間隔（以毫秒為單位）呼叫一個函數。 1 second = 1000 milliseconds.
+    setInterval(setDate, 1000);
+
+    setDate();
   </script>
 </body>
+
 </html>
