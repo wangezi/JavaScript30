@@ -107,7 +107,9 @@
 
       // console.log(second)
 
-      // 名叫 seconddegrees(秒的角度) 的常數來代表秒針的角度。 (second / 60)代表一圈要跑60次；360是圓圈有360度；90是因為 CSS 效果 => transform: rotate(90deg);  
+      // 名叫 seconddegrees(秒的角度) 的常數來代表秒針的角度。
+      //  (second / 60)代表一圈要跑60次；360是圓圈有360度；
+      // + 90 是為了修正起始位置，因為指針在 12 點的位置其實是 90 度。
       const secondsdegrees = ((second / 60) * 360) + 90;
 
       // 顯示上面計算的結果到 secondHand(.second-hand) 的 CSS 效果的 transform 角度
@@ -126,8 +128,8 @@
       // console.log(mins)
 
       // 名叫 minsDegrees(分鐘的角度) 的常數來代表分針的角度。 
-      // ((mins / 60) * 360) 用來根據分鐘數計算出分鐘指針的位置。 
-      // ((seconds / 60) * 6) 用來補償每秒鐘的微小移動，讓分鐘指針平滑過渡。 
+      // 每分鐘的角度變化 = 360 度 ÷ 60 分鐘 = 6 度/分鐘。 
+      // ((seconds / 60) * 6) 這部分確保分針在每秒鐘也會稍微移動（較真實的效果）。
       // + 90 則是將起始位置修正到 12 點的位置（垂直向上）。 
       const minsDegrees = ((mins / 60) * 360) + ((seconds / 60) * 6) + 90;
 
@@ -139,12 +141,14 @@
 
       // --------- 時針的計算與動畫 START ------------
 
-      // 取名叫 second(秒) 的常數來代表秒數。 getSeconds()傳回日期的秒數（0 到 59）。
+      // 取名叫 hour 的常數來代表時針。 getHours()傳回日期的時間（0 到 59）。
       const hour = now.getHours();
 
       // console.log(hour)
 
-      // 名叫 hourDegrees(時針的角度) 的常數來代表時針的角度。 (second / 60)代表一圈要跑60次；360是圓圈有360度；90是因為 CSS 效果 => transform: rotate(90deg);  
+      // 名叫 hourDegrees(時針的角度) 的常數來代表時針的角度。
+      // 每小時的角度變化 = 360 度 ÷ 12 小時 = 30 度/小時。
+      // ((mins / 60) * 30) 這部分確保時針會隨著分鐘的進展而稍微移動。  
       const hourDegrees = ((hour / 12) * 360) + ((mins / 60) * 30) + 90;
 
       // 顯示上面計算的結果到 hourHand(.hour-hand) 的 CSS 效果的 transform 角度
@@ -155,9 +159,10 @@
 
     }
 
-    //  setInterval()方法以指定的間隔（以毫秒為單位）呼叫一個函數。 1 second = 1000 milliseconds.
+    //  setInterval() 每秒呼叫一次 setDate()，以確保時間持續更新。
     setInterval(setDate, 1000);
 
+    // 立即執行一次 setDate()，避免載入頁面時要等一秒才顯示正確的時間。
     setDate();
   </script>
 </body>

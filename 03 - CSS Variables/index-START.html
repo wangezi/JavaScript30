@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Scoped CSS Variables and JS</title>
-  <link rel="icon" href="https://fav.farm/🔥" />
+  <link rel="icon" href="https://fav.farm/🐼" />
 </head>
+
 <body>
   <h2>Update CSS Variables with <span class='hl'>JS</span></h2>
 
@@ -16,20 +18,42 @@
     <input id="blur" type="range" name="blur" min="0" max="25" value="10" data-sizing="px">
 
     <label for="base">Base Color</label>
-    <input id="base" type="color" name="base" value="#ffc600">
+    <input id="base" type="color" name="base" value="#45d368">
   </div>
 
-  <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
+  <img src="https://i.pinimg.com/736x/9a/44/f9/9a44f94f64be9dcc3344f9d25757ade6.jpg">
 
   <style>
+    /* 第一步 :  */
 
-    /*
-      misc styles, nothing to do with CSS variables
-    */
+    /* 設置 CSS 變數 start */
+    :root {
+      --base: #45d368;
+      --spacing: 10px;
+      --blur: 10px;
+    }
+
+    img {
+      /* 給圖片加上內邊距，間隔的大小取自 --spacing（10px）。 */
+      padding: var(--spacing);
+
+      /* 設置背景顏色，顏色取自 --base（#45d368）。 */
+      background: var(--base);
+
+      /* 設置模糊效果，模糊的大小取自 --blur（10px）。 */
+      filter: blur(var(--blur));
+    }
+
+    .hl {
+      /* 設置字體顏色，顏色取自 --base（#45d368）。 */
+      color: var(--base);
+    }
+
+    /* 設置 CSS 變數 end */
 
     body {
       text-align: center;
-      background: #193549;
+      background: #70a8cf;
       color: white;
       font-family: 'helvetica neue', sans-serif;
       font-weight: 100;
@@ -46,7 +70,43 @@
   </style>
 
   <script>
+
+    // 第二步驟: 設置名叫 inputs 選取所有 .controls 區塊中的 <input> 標籤，並回傳一個 NodeList（類似陣列的結構）。
+    const inputs = document.querySelectorAll('.controls input')
+    // console.log(inputs) 
+
+    // 第四步驟 定義 handleUpdate() 函數
+
+    function handleUpdate() {
+      // console.log(this.value)
+
+      // this 代表觸發事件的 <input> 元素。
+      // this.dataset.sizing 取得 <input> 上的 data-sizing 屬性值。
+      // 若存在 data-sizing="px"，suffix 就會是 "px"；
+      // 若沒有（如顏色選擇器），則預設為空字串 ('')。
+      const suffix = this.dataset.sizing || '';
+
+      // document.documentElement.style.setProperty() 是一個 JavaScript 方法，專門用來動態修改 CSS 變數 (CSS Custom Properties) 的值。
+      // 這個方法非常實用，尤其在需要根據使用者操作即時變更樣式時。
+      // this.name 取得 <input> 的 name 屬性值，例如 spacing、blur、base。
+      // this.value 是使用者當前選擇的值。
+      // suffix 就會是 "px"；
+      document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix);
+
+      // console.log(this.dataset)
+
+    }
+
+    // 第三步驟 為每個 <input> 綁定事件
+
+    // change 事件 ➔ 當滑桿釋放時觸發（適合數值、顏色選擇器）。
+    inputs.forEach(input => input.addEventListener('change', handleUpdate));
+
+    // mousemove 事件 ➔ 滑動滑桿時立即觸發（確保變化即時可見）。
+    inputs.forEach(input => input.addEventListener('mousemove', handleUpdate));
+
   </script>
 
 </body>
+
 </html>

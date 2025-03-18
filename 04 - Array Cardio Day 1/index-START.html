@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Array Cardio 💪</title>
-  <link rel="icon" href="https://fav.farm/🔥" />
+  <link rel="icon" href="https://fav.farm/🐼" />
 </head>
+
 <body>
   <p><em>Psst: have a look at the JavaScript Console</em> 💁</p>
   <script>
@@ -35,32 +37,127 @@
       'Berne, Eric', 'Berra, Yogi', 'Berry, Wendell', 'Bevan, Aneurin', 'Ben-Gurion, David', 'Bevel, Ken', 'Biden, Joseph', 'Bennington, Chester', 'Bierce, Ambrose',
       'Billings, Josh', 'Birrell, Augustine', 'Blair, Tony', 'Beecher, Henry', 'Biondo, Frank'
     ];
-    
+
     // Array.prototype.filter()
-    // 1. Filter the list of inventors for those who were born in the 1500's
+    // 1. 篩選 1500 年代出生的發明家列表
+
+    // .filter() 是 JavaScript 陣列的方法，用於根據指定條件篩選出符合條件的元素，並回傳一個新陣列。
+    // inventors 是一個包含多位發明家的陣列
+    // inventor 代表參數
+    //  year 屬性
+
+    // const fifteen = inventors.filter(function (inventor) {
+    //   if (inventor.year >= 1500 && inventor.year < 1600) {
+    //     return true;
+    //   }
+    // });
+
+    //  簡潔寫法(箭頭函數)
+
+    const fifteen = inventors.filter(inventor => inventor.year >= 1500 && inventor.year < 1600);
+
+    console.table(fifteen);
 
     // Array.prototype.map()
-    // 2. Give us an array of the inventors first and last names
+    // 2. 給一系列發明人的名字和姓氏
+
+    // map()透過為每個陣列元素呼叫一個函數來建立一個新陣列。
+    // 
+    const fullNames = inventors.map(inventor => `${inventor.first} ${inventor.last}`);
+
+    console.log(fullNames)
 
     // Array.prototype.sort()
-    // 3. Sort the inventors by birthdate, oldest to youngest
+    // 3. 依出生日期（從最年長到最年輕）對發明者進行排序
+
+    // .sort() 是一個修改原陣列的 JavaScript 方法，它會根據指定的排序函式對陣列進行排序。
+    // sort() 默認是按照字典順序 (字串排序) 進行排序，因此如果比較的是數字或其他類型的資料，需要提供一個比較函式來確保排序邏輯正確。
+    // 回傳 正數（1）：a 排在 b 後面。
+    // 回傳 負數（-1）：a 排在 b 前面。
+    // 回傳 零：a 和 b 的順序保持不變。
+
+    // const ordered = inventors.sort(function (a, b) {
+    //   if (a.year > b.year) {
+    //     return 1;
+    //   } else {
+    //     return -1;
+    //   }
+    // })
+
+    //  簡潔寫法(箭頭函數)
+    // ? 1 : -1 為 三元運算符
+    // 如果 a.year 大於 b.year，則回傳 1，表示 a 排在 b 後面。
+    // 如果 a.year 小於或等於 b.year，則回傳 -1，表示 a 排在 b 前面。
+    const ordered = inventors.sort((a, b) => a.year > b.year ? 1 : -1);
+    console.table(ordered);
 
     // Array.prototype.reduce()
-    // 4. How many years did all the inventors live all together?
+    // 4. 所有發明家加起來活了多少年？
 
-    // 5. Sort the inventors by years lived
+    // inventors 是一個陣列，包含了每位發明家的物件資料。
+    // reduce() 的回呼函式有兩個參數：
+    // total：這是累積的總和，初始值設為 0。
+    // inventor：這是陣列中的每一個元素（在這個情況下是發明家物件）。
+    const totalYears = inventors.reduce((total, inventor) => {
 
-    // 6. create a list of Boulevards in Paris that contain 'de' anywhere in the name
-    // https://en.wikipedia.org/wiki/Category:Boulevards_in_Paris
+      // inventor.passed - inventor.year 計算出每位發明家的年齡，即他們活了多少年。
+      // 每計算出一位發明家的年齡，就將其加入 total，從而累積出總共的年數。
+      return total + (inventor.passed - inventor.year);
+    }, 0);
 
+    console.log(totalYears);
 
-    // 7. sort Exercise
-    // Sort the people alphabetically by last name
+    // 5. 按壽命對發明家進行排序
 
-    // 8. Reduce Exercise
-    // Sum up the instances of each of these
-    const data = ['car', 'car', 'truck', 'truck', 'bike', 'walk', 'car', 'van', 'bike', 'walk', 'car', 'van', 'car', 'truck' ];
+    // const oldest = inventors.sort(function (a, b) {
+    //   const lastGuy = a.passed - a.year;
+    //   const nextGuy = b.passed - b.year;
+    //   return lastGuy > nextGuy ? -1 : 1;
+    // });
+
+    //  簡潔寫法(箭頭函數)
+    // (b.passed - b.year) - (a.passed - a.year) 這樣的寫法簡單地將 b 和 a 的年齡相減，這樣可以更清晰地表達從大到小的排序邏輯。
+    // 如果 b 活得比較長，結果為正數，這樣 b 會排在 a 前面。
+    const oldest = inventors.sort((a, b) => (b.passed - b.year) - (a.passed - a.year));
+    console.table(oldest);
+
+    // 6. sort Exercise (排序練習)
+    // 按姓氏字母順序對人員進行排序
+
+    // lastOne 和 nextOne 代表 people 陣列中的兩個元素（每個元素是 姓, 名 的字串）。
+    // split(',') 會把每個字串以逗號分開，並將結果存入一個陣列。這樣可以把 "Doe, John" 分為 aLast = "Doe" 和 aFirst = "John"。
+    // return aLast > bLast ? 1 : -1; 這行代碼比較兩個姓氏 aLast 和 bLast，並根據它們的字母順序來確定它們的排序：
+    // 如果 aLast 比 bLast 大（即 aLast 在字母順序上排後），則返回 1，表示 nextOne（b）應該排在前面。
+    // 如果 aLast 比 bLast 小（即 aLast 在字母順序上排前），則返回 - 1，表示 lastOne（a）應該排在前面。
+    const alpha = people.sort(function (lastOne, nextOne) {
+      const [aLast, aFirst] = lastOne.split(',');
+      const [bLast, bfirst] = nextOne.split(',');
+      return aLast > bLast ? 1 : -1;
+    });
+
+    console.log(alpha);
+
+    // 7. Reduce Exercise (累計練習)
+    // 總結每一個的實例
+    const data = ['car', 'car', 'truck', 'truck', 'bike', 'walk', 'car', 'van', 'bike', 'walk', 'car', 'van', 'car', 'truck'];
+
+    // obj 是累積的物件，最初是空物件 {}。
+    // item 是當前處理的交通工具名稱（data 陣列中的每個元素）。    
+    const transportation = data.reduce(function (obj, item) {
+      // console.log(item)
+      // if (!obj[item]) { obj[item] = 0; } 這行代碼檢查 obj 中是否已經存在這個交通工具的屬性，如果沒有，則初始化為 0。
+      if (!obj[item]) {
+
+        obj[item] = 0;
+      }
+      // obj[item]++ 每次遇到相同的交通工具名稱，就將對應的屬性值增加 1。
+      obj[item]++;
+      return obj;
+    }, {});
+
+    console.log(transportation)
 
   </script>
 </body>
+
 </html>
