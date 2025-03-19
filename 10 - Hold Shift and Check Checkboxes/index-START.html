@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Hold Shift to Check Multiple Checkboxes</title>
-  <link rel="icon" href="https://fav.farm/🔥" />
+  <link rel="icon" href="https://fav.farm/🐼" />
 </head>
+
 <body>
   <style>
-
     html {
       font-family: sans-serif;
       background: #ffc600;
@@ -18,7 +19,7 @@
       margin: 50px auto;
       background: white;
       border-radius: 5px;
-      box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
+      box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.1);
     }
 
     .item {
@@ -31,7 +32,7 @@
       border-bottom: 0;
     }
 
-    input:checked + p {
+    input:checked+p {
       background: #F9F9F9;
       text-decoration: line-through;
     }
@@ -45,17 +46,20 @@
       padding: 20px;
       transition: background 0.2s;
       flex: 1;
-      font-family:'helvetica neue';
+      font-family: 'helvetica neue';
       font-size: 20px;
       font-weight: 200;
       border-left: 1px solid #D1E2FF;
     }
   </style>
-   <!--
+  <!--
    The following is a common layout you would see in an email client.
 
    When a user clicks a checkbox, holds Shift, and then clicks another checkbox a few rows down, all the checkboxes inbetween those two checkboxes should be checked.
 
+   以下是您在電子郵件用戶端中看到的常見佈局。
+
+   當使用者按一下複選框，按住 Shift 鍵，然後按一下幾行下方的另一個複選框時，應選取這兩個複選框之間的所有複選框。
   -->
   <div class="inbox">
     <div class="item">
@@ -96,7 +100,57 @@
     </div>
   </div>
 
-<script>
-</script>
+  <script>
+    // 選取所有 .inbox 容器內的 checkbox 元素
+    const checkboxes = document.querySelectorAll('.inbox input[type="checkbox"]');
+
+    // console.log(checkboxes);
+
+    // 用於記錄上一次被點擊的 checkbox
+    let lastChecked;
+
+    function handleCheck(e) {
+      // console.log(e);
+
+      // 檢查是否按下了 Shift 鍵
+      // 並檢查是否正在檢查它
+
+      // 設定一個變數來追蹤「中間區域」的複選框
+      let inBetween = false;
+
+      // 檢查是否同時按下了 Shift 鍵，且當前 checkbox 是已被選中的狀態
+      if (e.shiftKey && this.checked) {
+
+        // 繼續做我們想做的事
+
+        // 循環遍歷每個複選框
+        checkboxes.forEach(checkbox => {
+          console.log(checkbox);
+
+          // 如果當前 checkbox 等於「這次點擊的」或「上次點擊的」
+          if (checkbox === this || checkbox === lastChecked) {
+
+            // 翻轉 inBetween 標誌，代表開始/停止標記中間的複選框
+            inBetween = !inBetween;
+
+            console.log('中間開始檢查它們！')
+          };
+
+          // 如果 inBetween 為 true，則標記該 checkbox 為「選中」狀態
+          if (inBetween) {
+            checkbox.checked = this.checked;
+          }
+        })
+      };
+
+      // 更新記錄的上次選擇的 checkbox
+      lastChecked = this;
+    }
+
+    // 針對每個 checkbox 綁定 `click` 事件，使用 `handleCheck` 作為處理函數
+    checkboxes.forEach(checkbox => checkbox.addEventListener('click', handleCheck));
+
+  </script>
 </body>
+
 </html>
