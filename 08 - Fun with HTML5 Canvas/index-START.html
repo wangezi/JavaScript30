@@ -1,20 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>HTML5 Canvas</title>
-  <link rel="icon" href="https://fav.farm/🔥" />
+  <link rel="icon" href="https://fav.farm/🐼" />
 </head>
-<body>
-<canvas id="draw" width="800" height="800"></canvas>
-<script>
-</script>
 
-<style>
-  html, body {
-    margin: 0;
-  }
-</style>
+<body>
+  <canvas id="draw" width="800" height="800"></canvas>
+  <script>
+    const canvas = document.querySelector('#draw');
+    const ctx = canvas.getContext('2d');  // 取得畫布的繪圖上下文
+    canvas.width = window.innerWidth;  // 設定畫布的寬度為視窗的寬度
+    canvas.height = window.innerHeight;  // 設定畫布的高度為視窗的高度
+
+    // 設置畫筆屬性
+    ctx.strokeStyle = '#BADA55';  // 預設的畫筆顏色
+    ctx.lineJoin = 'round';  // 設置線條連接處的樣式
+    ctx.lineCap = 'round';  // 設置線條末端的樣式
+    ctx.lineWidth = 100;  // 設定畫筆的寬度
+
+    // 用來追蹤繪圖狀態的變數
+    let isDrawing = false;  // 是否正在繪圖
+    let lastX = 0;  // 上一個座標的 X 軸
+    let lastY = 0;  // 上一個座標的 Y 軸
+    let hue = 0;  // 色相，用來改變顏色
+    let direction = true;  // 控制畫筆寬度增減的方向
+
+    // 畫圖的主要函數
+    function draw(e) {
+      if (!isDrawing) return;  // 如果沒有按下滑鼠左鍵，停止繪圖
+
+      ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;  // 設定顏色，使用 HSL 顏色模式，色相隨著變數 hue 改變
+      ctx.beginPath();  // 開始一條新路徑
+      ctx.moveTo(lastX, lastY);  // 設定路徑的起始點為上一個座標
+      ctx.lineTo(e.offsetX, e.offsetY);  // 畫一條從上一個座標到當前滑鼠位置的線段
+      ctx.stroke();  // 繪製這條線段
+
+      [lastX, lastY] = [e.offsetX, e.offsetY];  // 更新上一個座標為當前座標
+
+      hue++;  // 增加色相值，讓顏色變化
+      if (hue >= 360) {
+        hue = 0;  // 如果色相達到 360，則重新從 0 開始
+      }
+
+      // 改變畫筆的寬度，讓畫筆寬度動態增減
+      if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+        direction = !direction;  // 改變寬度的增減方向
+      }
+
+      if (direction) {
+        ctx.lineWidth++;  // 畫筆寬度增大
+      } else {
+        ctx.lineWidth--;  // 畫筆寬度縮小
+      }
+    }
+
+    // 事件監聽器
+    canvas.addEventListener('mousemove', draw);  // 監聽滑鼠移動，執行繪圖函數
+    canvas.addEventListener('mousedown', (e) => {  // 監聽滑鼠按下事件，開始繪圖
+      isDrawing = true;
+      [lastX, lastY] = [e.offsetX, e.offsetY];  // 記錄當前位置作為起始點
+    });
+    canvas.addEventListener('mouseup', () => isDrawing = false);  // 監聽滑鼠放開事件，停止繪圖
+    canvas.addEventListener('mouseout', () => isDrawing = false);  // 監聽滑鼠移出畫布事件，停止繪圖
+
+
+  </script>
+
+  <style>
+    html,
+    body {
+      margin: 0;
+    }
+  </style>
 
 </body>
+
 </html>

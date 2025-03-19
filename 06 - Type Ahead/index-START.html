@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Type Ahead 👀</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="https://fav.farm/🔥" />
+  <link rel="icon" href="https://fav.farm/🐼" />
 </head>
+
 <body>
 
   <form class="search-form">
@@ -15,9 +17,69 @@
       <li>or a state</li>
     </ul>
   </form>
-<script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+  <script>
+    // 定義資料來源的網址，這個 JSON 檔案包含了城市的資料
+    const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 
-</script>
+    // 建立一個空陣列來儲存城市資料
+    const cities = [];
+
+    // 使用 fetch 方法從 endpoint 取得城市資料
+    fetch(endpoint)
+      .then(blob => blob.json())  // 取得資料後轉換成 JSON 格式
+      .then(data => cities.push(...data));  // 將資料推入 cities 陣列
+
+    // 定義 findMatches 函數，根據搜尋詞過濾符合條件的城市資料
+    function findMatches(wordToMatch, cities) {
+      return cities.filter(place => {
+        // 使用正則表達式來匹配城市或州的名稱
+        const regex = new RegExp(wordToMatch, 'gi');
+        // 檢查城市名稱或州名是否與搜尋詞匹配
+        return place.city.match(regex) || place.state.match(regex);
+      });
+    };
+
+    // 定義格式化數字的函數，將人口數字加上逗號
+    function numberWithCommas(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    // 定義顯示匹配結果的函數
+    function displayMatches() {
+      // 取得匹配的城市資料
+      const matchArray = findMatches(this.value, cities);
+
+      // 根據匹配結果生成 HTML 列表
+      const html = matchArray.map(place => {
+        const regex = new RegExp(this.value, 'gi');  // 根據輸入的關鍵字創建正則表達式
+        // 高亮顯示城市名稱中匹配的部分
+        const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`);
+        // 高亮顯示州名中匹配的部分
+        const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
+
+        // 返回一個包含城市、州和人口的 HTML 組件
+        return `
+      <li>
+        <span class="name">${cityName}, ${stateName}</span>
+        <span class="population">${numberWithCommas(place.population)}</span>
+      </li>
+    `;
+      }).join('');  // 將所有的列表項目拼接成一個字串
+
+      // 將生成的 HTML 插入到建議顯示區域
+      suggestions.innerHTML = html;
+    }
+
+    // 取得搜尋框和建議顯示區域的 DOM 元素
+    const searchInput = document.querySelector('.search');
+    const suggestions = document.querySelector('.suggestions');
+
+    // 當搜尋框內容變更時，觸發 displayMatches 函數來顯示匹配結果
+    searchInput.addEventListener('change', displayMatches);
+    // 當使用者鍵入字元時，觸發 displayMatches 函數來顯示匹配結果
+    searchInput.addEventListener('keyup', displayMatches);
+  </script>
+
 </body>
+
 </html>

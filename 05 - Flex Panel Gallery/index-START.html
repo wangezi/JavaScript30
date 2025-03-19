@@ -54,6 +54,7 @@
       justify-content: center;
       align-items: center;
       display: flex;
+      flex-direction: column;
     }
 
     .panel1 {
@@ -81,8 +82,29 @@
       margin: 0;
       width: 100%;
       transition: transform 0.5s;
-      border: 1px solid red;
+      /* border: 1px solid red; */
+      flex: 1 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
+
+    .panel>*:first-child {
+      transform: translateY(-100%);
+    }
+
+    .panel.open-active>*:first-child {
+      transform: translateY(0);
+    }
+
+    .panel>*:last-child {
+      transform: translateY(100%);
+    }
+
+    .panel.open-active>*:last-child {
+      transform: translateY(0);
+    }
+
 
     .panel p {
       text-transform: uppercase;
@@ -96,6 +118,7 @@
     }
 
     .panel.open {
+      flex: 5;
       font-size: 40px;
     }
   </style>
@@ -130,6 +153,31 @@
   </div>
 
   <script>
+    const panels = document.querySelectorAll('.panel');
+
+    function toggleOpen() {
+      console.log('Hello');
+
+      panels.forEach(panel => panel.classList.remove('open'));  // 移除所有面板的 'open' 類別
+      this.classList.add('open');// 只在當前面板上添加 'open' 類別
+    }
+
+    function toggleActive(e) {
+      console.log(e.propertyName);
+
+      // 意思是如果過渡屬性名稱包含 flex（這通常是用於 CSS Flexbox 佈局），
+      // 則會在當前面板上切換 open-active 類別。
+      if (e.propertyName.includes('flex')) {
+        this.classList.toggle('open-active');
+      }
+    }
+
+    // 為每個面板元素添加一個 click 事件監聽器。當面板被點擊時，會調用 toggleOpen 函式來切換 open 類別。
+    panels.forEach(panel => panel.addEventListener('click', toggleOpen));
+
+    // 為每個面板添加 transitionend 事件監聽器。這個事件會在 CSS 過渡結束後被觸發。
+    // 當過渡結束時，toggleActive 函式會檢查過渡的屬性名稱，並根據需要切換 open-active 類別。
+    panels.forEach(panel => panel.addEventListener('transitionend', toggleActive));
 
   </script>
 
