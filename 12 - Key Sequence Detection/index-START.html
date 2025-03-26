@@ -3,16 +3,45 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>Key Detection</title>
+  <title>Key Detection(按鍵檢測)</title>
   <script type="text/javascript" src="./cornify.js"></script>
   <link rel="icon" href="https://fav.farm/🐼" />
 </head>
 
 <body>
   <script>
+
+    // 以下程式通常被用來作為 網站的彩蛋（Easter Egg），當使用者輸入特定密碼時，觸發隱藏的驚喜！🎉
+
+    // 用於儲存使用者按下的鍵   pressed(按下)
+    const pressed = [];
+
+    // 設定觸發的密碼為 unicorn(獨角獸)   secretCode(秘密代碼)   
+    const secretCode = 'unicorn';
+
+    // 監聽鍵盤按鍵釋放 (keyup) 事件
     window.addEventListener('keyup', (e) => {
       console.log(e.key);
-    })
+
+      // 將使用者按下的鍵存入 pressed 陣列中
+      pressed.push(e.key);
+
+      // 控制陣列的長度，確保只保留最近輸入的字符
+      // splice(起始位置, 刪除數量)
+      // -secretCode.length - 1：確保在超過 secretCode 長度時，刪除最舊的輸入
+      // pressed.length - secretCode.length：計算需要刪除的元素數量
+      pressed.splice(-secretCode.length - 1, pressed.length - secretCode.length);
+      if (pressed.join('').includes(secretCode)) {
+
+        // 檢查 pressed 陣列中的輸入是否包含 secretCode
+        console.log('DING DING!');
+
+        // 執行 cornify_add() 函數 (cornify.js) 
+        cornify_add();
+      }
+      // 在控制台顯示當前輸入的按鍵序列
+      console.log(pressed);
+    });
   </script>
 </body>
 
