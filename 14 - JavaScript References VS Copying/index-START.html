@@ -1,57 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>JS Reference VS Copy</title>
-  <link rel="icon" href="https://fav.farm/🔥" />
+  <link rel="icon" href="https://fav.farm/🐼" />
 </head>
+
 <body>
 
   <script>
-    // start with strings, numbers and booleans
+    // start with strings, numbers and booleans (從字串、數字和布林值開始)
+    // let num = 100;
+    // let num2 = num;
+    // console.log(num, num2);
 
-    // Let's say we have an array
+    // num = 200;
+    // console.log(num, num2);
+
+    // let name = 'Ian';
+    // let name2 = name;
+    // console.log(name, name2);
+    // name = 'IanYin';
+    // console.log(name, name2);
+
+    // Let's say we have an array (假設我們有一個數組)
     const players = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
 
-    // and we want to make a copy of it.
+    // and we want to make a copy of it. (我們想要複製它。)
 
-    // You might think we can just do something like this:
+    const team = players;
 
-    // however what happens when we update that array?
+    console.log(players, team);
 
-    // now here is the problem!
+    // You might think we can just do something like this: (你可能會認為我們可以這樣做：)
 
-    // oh no - we have edited the original array too!
+    // team[3] = 'Lux';
+    // console.log(team);
 
-    // Why? It's because that is an array reference, not an array copy. They both point to the same array!
+    // however what happens when we update that array? (但是當我們更新該數組時會發生什麼？)
 
-    // So, how do we fix this? We take a copy instead!
+    // now here is the problem! (現在這是問題！)
 
-    // one way
+    // oh no - we have edited the original array too! (哦不-我們也編輯了原始數組！)
 
-    // or create a new array and concat the old one in
+    // Why? It's because that is an array reference, not an array copy. They both point to the same array! (為什麼？因為那是一個數組引用，而不是一個數組副本。它們都指向同一個數組！)
 
-    // or use the new ES6 Spread
+    // So, how do we fix this? We take a copy instead! (那麼，我們該如何解決這個問題？我們取一個副本！)
 
-    // now when we update it, the original one isn't changed
+    const team2 = players.slice();
+    const team3 = [].concat(players);
 
-    // The same thing goes for objects, let's say we have a person object
+    // one way (一種方法)
+    const team4 = [...players];
+    team4[3] = 'hello';
+    console.log(team4);
 
-    // with Objects
+    const team5 = Array.from(players);
+
+    // or create a new array and concat the old one in (或者創建一個新數組，然後連接舊數組)
+
+    // or use the new ES6 Spread (或使用新的ES6 Spread)
+
+    // now when we update it, the original one isn't changed (現在當我們更新它時，原始數組不會改變)
+
+    // The same thing goes for objects, let's say we have a person object (對於對象也是一樣的，假設我們有一個人對象)
+
+    // with Objects (對象)
     const person = {
       name: 'Wes Bos',
       age: 80
     };
 
-    // and think we make a copy:
+    // and think we make a copy:  (並且認為我們做了一份副本：)
 
-    // how do we take a copy instead?
+    // const captain = person;
+    // captain.number = 99;
+    // console.log(captain)
 
-    // We will hopefully soon see the object ...spread
+    // how do we take a copy instead? (我們該如何取代一份副本？)
 
-    // Things to note - this is only 1 level deep - both for Arrays and Objects. lodash has a cloneDeep method, but you should think twice before using it.
+    const captain2 = Object.assign({}, person, { number: 99, age: 12 });
+    console.log(captain2);
+
+    // We will hopefully soon see the object ...spread  (我們很快就會看到對象...spread)
+
+    // const captain3 = { ...person };
+
+    // Things to note - this is only 1 level deep - both for Arrays and Objects. lodash has a cloneDeep method, but you should think twice before using it. (需要注意的是-這只有1級深度-對於數組和對象都是如此。lodash有一個cloneDeep方法，但在使用它之前，您應該三思。)
+
+    const ian = {
+      name: 'Ian',
+      age: 18,
+      social: {
+        IG: 'zhong_yin',
+        Line: 'Eㄗ'
+      }
+    };
+
+    console.clear();
+    console.log(ian);
+
+    const dev = Object.assign({}, wes);
+
+    const dev2 = JSON.parse(JSON.stringify(wes));
 
   </script>
 
 </body>
+
 </html>
